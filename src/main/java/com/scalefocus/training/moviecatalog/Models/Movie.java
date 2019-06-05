@@ -11,7 +11,7 @@ public class Movie {
 
     private String title;
 
-    private String year;
+    private double year;
 
     private String[] countries;
 
@@ -37,7 +37,7 @@ public class Movie {
 
     private String rated;
 
-    public Movie(String id, String title, String year, String[] countries, String[] genres, String director, String[] writers, String[] actors, String plot, String poster, IMDB imdb, Tomato tomato, Awards awards, String type, String rated) {
+    public Movie(String id, String title, double year, String[] countries, String[] genres, String director, String[] writers, String[] actors, String plot, String poster, IMDB imdb, Tomato tomato, Awards awards, String type, String rated) {
         this.id = id;
         this.title = title;
         this.year = year;
@@ -72,11 +72,11 @@ public class Movie {
     }
 
 
-    public String getYear() {
+    public double getYear() {
         return year;
     }
 
-    public void setYear(String year) {
+    public void setYear(double year) {
         this.year = year;
     }
 

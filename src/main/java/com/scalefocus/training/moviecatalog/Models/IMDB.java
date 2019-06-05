@@ -3,10 +3,10 @@ package com.scalefocus.training.moviecatalog.Models;
 public class IMDB {
 
     private String id;
-    private String rating;
-    private String votes;
+    private double rating;
+    private double votes;
 
-    public IMDB(String id, String rating, String votes) {
+    public IMDB(String id, double rating, double votes) {
         this.id = id;
         this.rating = rating;
         this.votes = votes;
@@ -20,21 +20,19 @@ public class IMDB {
         this.id = id;
     }
 
-    public String getRating() {
+    public double getRating() {
         return rating;
     }
 
-    public void setRating(String rating) {
+    public void setRating(double rating) {
         this.rating = rating;
     }
 
-    public String getVotes() {
+    public double getVotes() {
         return votes;
     }
 
-    public void setVotes(String votes) {
+    public void setVotes(double votes) {
         this.votes = votes;
     }
-
-
 }
