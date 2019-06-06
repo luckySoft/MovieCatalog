@@ -3,9 +3,7 @@ package com.scalefocus.training.moviecatalog.Controller;
 import com.scalefocus.training.moviecatalog.Models.Movie;
 import com.scalefocus.training.moviecatalog.Repository.MovieRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -19,7 +17,6 @@ public class HelloController {
     @Autowired
     private MovieRepository repository;
 
-
     @GetMapping("/movies")
     public List<Movie> getAllMovies() {
         return this.repository.findAll();
@@ -32,10 +29,9 @@ public class HelloController {
 
     @GetMapping("/movies/actor={actors}")
     public List<Movie> getByActors(@PathVariable String actors) {
-
         return this.repository.findByActors(actors);
-
     }
+
     @GetMapping("/movies/year={year}")
     public List<Movie> getByYear(@PathVariable double year){
         return this.repository.findByYear(year);
@@ -60,6 +56,7 @@ public class HelloController {
     public List<Movie> getByPlotLike(@PathVariable String plot){
         return this.repository.findByPlotLike(plot);
     }
+
     @GetMapping("/movies/writer={writer}")
     public List<Movie> getByWriters(@PathVariable String writer){
         return this.repository.findByWriters(writer);
@@ -74,6 +71,7 @@ public class HelloController {
     public List<Movie> getByTomatoNotNull(){
         return this.repository.findByTomatoIsNotNullQuery();
     }
+
     @GetMapping("/movies/awardsWon>={awardsWon}")
     public List<Movie> getByAwardsWon(@PathVariable double awardsWon){
         return this.repository.findByAwardsWon(awardsWon);
