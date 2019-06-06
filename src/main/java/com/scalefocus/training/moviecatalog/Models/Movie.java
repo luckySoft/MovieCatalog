@@ -11,7 +11,7 @@ public class Movie {
 
     private String title;
 
-    private double year;
+    private Double year;
 
     private String[] countries;
 
@@ -27,7 +27,8 @@ public class Movie {
 
     private String poster;
 
-    private IMDB imdb;
+
+    private Imdb imdb;
 
     private Tomato tomato;
 
@@ -37,7 +38,9 @@ public class Movie {
 
     private String rated;
 
-    public Movie(String id, String title, double year, String[] countries, String[] genres, String director, String[] writers, String[] actors, String plot, String poster, IMDB imdb, Tomato tomato, Awards awards, String type, String rated) {
+
+
+    public Movie(String id, String title, double year, String[] countries, String[] genres, String director, String[] writers, String[] actors, String plot, String poster, Imdb imdb, Tomato tomato, Awards awards, String type, String rated) {
         this.id = id;
         this.title = title;
         this.year = year;
@@ -136,11 +139,11 @@ public class Movie {
         this.poster = poster;
     }
 
-    public IMDB getImdb() {
+    public Imdb getImdb() {
         return imdb;
     }
 
-    public void setImdb(IMDB imdb) {
+    public void setImdb(Imdb imdb) {
         this.imdb = imdb;
     }
 

@@ -16,25 +16,18 @@ public interface MovieRepository extends MongoRepository<Movie, String> {
 
     List<Movie> findByTitleLike(String title);
 
+    Movie findByTitle(String title);
+
     List<Movie> findByActors(String actors);
 
-    List<Movie> findByYear(double year);
-
-    List<Movie> findByCountries(String countries);
-
     List<Movie> findByGenres(String genres);
-
-    List<Movie> findByDirector(String director);
-
-    List<Movie> findByWriters(String writers);
 
     List<Movie> findByPlotLike(String plot);
 
     @Query("{'imdb.rating' : {$gte : ?0}}")
     List<Movie> findByImdbRatingGreaterThan(double imdbRating);
 
-    @Query("{'tomato' : {$ne : null}}")
-    List<Movie> findByTomatoIsNotNullQuery();
-    @Query("{'awards.wins' : {$gte : ?0}}")
-    List<Movie> findByAwardsWon(double awards);
+
+
+
 }
