@@ -4,15 +4,15 @@ public class Tomato {
 
     private String meter;
     private String image;
-    private double rating;
-    private double reviews;
-    private double fresh;
+    private Double rating;
+    private Double reviews;
+    private Double fresh;
     private String consensus;
-    private double userMeter;
-    private double userRating;
-    private double userReviews;
+    private Double userMeter;
+    private Double userRating;
+    private Double userReviews;
 
-    public Tomato(String meter, String image, double rating, double reviews, double fresh, String consensus, double userMeter, double userRating, double userReviews) {
+    public Tomato(String meter, String image, Double rating, Double reviews, Double fresh, String consensus, Double userMeter, Double userRating, Double userReviews) {
         this.meter = meter;
         this.image = image;
         this.rating = rating;
@@ -40,27 +40,27 @@ public class Tomato {
         this.image = image;
     }
 
-    public double getRating() {
+    public Double getRating() {
         return rating;
     }
 
-    public void setRating(double rating) {
+    public void setRating(Double rating) {
         this.rating = rating;
     }
 
-    public double getReviews() {
+    public Double getReviews() {
         return reviews;
     }
 
-    public void setReviews(double reviews) {
+    public void setReviews(Double reviews) {
         this.reviews = reviews;
     }
 
-    public double getFresh() {
+    public Double getFresh() {
         return fresh;
     }
 
-    public void setFresh(double fresh) {
+    public void setFresh(Double fresh) {
         this.fresh = fresh;
     }
 
@@ -72,27 +72,27 @@ public class Tomato {
         this.consensus = consensus;
     }
 
-    public double getUserMeter() {
+    public Double getUserMeter() {
         return userMeter;
     }
 
-    public void setUserMeter(double userMeter) {
+    public void setUserMeter(Double userMeter) {
         this.userMeter = userMeter;
     }
 
-    public double getUserRating() {
+    public Double getUserRating() {
         return userRating;
     }
 
-    public void setUserRating(double userRating) {
+    public void setUserRating(Double userRating) {
         this.userRating = userRating;
     }
 
-    public double getUserReviews() {
+    public Double getUserReviews() {
         return userReviews;
     }
 
-    public void setUserReviews(double userReviews) {
+    public void setUserReviews(Double userReviews) {
         this.userReviews = userReviews;
     }
 }

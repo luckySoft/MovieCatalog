@@ -3,10 +3,10 @@ package com.scalefocus.training.moviecatalog.Models;
 public class Awards {
 
     private String wins;
-    private double nominations;
+    private Double nominations;
     private String text;
 
-    public Awards(String wins, double nominations, String text) {
+    public Awards(String wins, Double nominations, String text) {
         this.wins = wins;
         this.nominations = nominations;
         this.text = text;
@@ -20,11 +20,11 @@ public class Awards {
         this.wins = wins;
     }
 
-    public double getNominations() {
+    public Double getNominations() {
         return nominations;
     }
 
-    public void setNominations(double nominations) {
+    public void setNominations(Double nominations) {
         this.nominations = nominations;
     }
 
