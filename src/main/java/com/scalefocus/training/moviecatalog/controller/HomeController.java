@@ -1,4 +1,4 @@
-package com.scalefocus.training.moviecatalog.Controller;
+package com.scalefocus.training.moviecatalog.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

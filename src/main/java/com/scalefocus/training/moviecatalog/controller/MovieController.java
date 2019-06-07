@@ -1,14 +1,16 @@
-package com.scalefocus.training.moviecatalog.Controller;
+package com.scalefocus.training.moviecatalog.controller;
 
-import com.scalefocus.training.moviecatalog.Models.Movie;
-import com.scalefocus.training.moviecatalog.Repository.MovieRepository;
+import com.scalefocus.training.moviecatalog.Мodels.Movie;
+import com.scalefocus.training.moviecatalog.repository.MovieRepository;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
+
+import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 
 /**
  * @author Evgeni Stoykov
@@ -25,8 +27,8 @@ public class MovieController {
     //GetMappings
 
     @GetMapping("/{id}")
-    public Movie getMovieById( @PathVariable ObjectId id){
-        return this.repository.findById(id);
+    public Optional<Movie> getMovieById(@PathVariable String id) throws Exception{
+       return this.repository.findById(id);
     }
 
     @GetMapping("/")
@@ -87,13 +89,15 @@ public class MovieController {
 
     @PostMapping("/new")
     public Movie newMovie(@RequestBody Movie newMovie){
+
+
         return this.repository.save(newMovie);
     }
 
     //Put Mapping
 
     @PutMapping("/{id}")
-    public void updateMovie(@Valid @RequestBody Movie newMovie, @PathVariable String id){
+    public void updateMovie(@RequestBody Movie newMovie, @PathVariable String id){
 
     newMovie.setId(id);
     this.repository.save(newMovie);
@@ -107,5 +111,13 @@ public class MovieController {
         this.repository.deleteById(id.toString());
     }
 
+
+
+    //Get to Json
+
+    @RequestMapping(value ="/toJSON", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8_VALUE)
+    public List<Movie> getMovieToJSON(){
+        return this.repository.findAll();
+    }
 
 }

@@ -1,4 +1,4 @@
-package com.scalefocus.training.moviecatalog.Models;
+package com.scalefocus.training.moviecatalog.Мodels;
 
 public class Awards {
 
@@ -6,6 +6,9 @@ public class Awards {
     private Double nominations;
     private String text;
 
+
+    public Awards(){
+    }
     public Awards(String wins, Double nominations, String text) {
         this.wins = wins;
         this.nominations = nominations;

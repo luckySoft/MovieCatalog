@@ -1,4 +1,4 @@
-package com.scalefocus.training.moviecatalog.Models;
+package com.scalefocus.training.moviecatalog.Мodels;
 
 public class Imdb {
 
@@ -8,6 +8,10 @@ public class Imdb {
     private Double rating;
 
     private Double votes;
+
+    public Imdb(){
+
+    }
 
     public Imdb(String imdb_id, Double rating, Double votes) {
         this.imdb_id = imdb_id;

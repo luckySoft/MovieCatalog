@@ -1,4 +1,4 @@
-package com.scalefocus.training.moviecatalog.Models;
+package com.scalefocus.training.moviecatalog.Мodels;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -38,7 +38,9 @@ public class Movie {
 
     private String rated;
 
+    public Movie(){
 
+    }
 
     public Movie(String id, String title, double year, String[] countries, String[] genres, String director, String[] writers, String[] actors, String plot, String poster, Imdb imdb, Tomato tomato, Awards awards, String type, String rated) {
         this.id = id;

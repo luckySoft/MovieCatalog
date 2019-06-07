@@ -1,4 +1,4 @@
-package com.scalefocus.training.moviecatalog.Models;
+package com.scalefocus.training.moviecatalog.Мodels;
 
 public class Tomato {
 
@@ -11,6 +11,9 @@ public class Tomato {
     private Double userMeter;
     private Double userRating;
     private Double userReviews;
+
+    public Tomato(){}
+
 
     public Tomato(String meter, String image, Double rating, Double reviews, Double fresh, String consensus, Double userMeter, Double userRating, Double userReviews) {
         this.meter = meter;

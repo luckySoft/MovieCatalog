@@ -1,4 +1,4 @@
-package com.scalefocus.training.moviecatalog.Repository;
+package com.scalefocus.training.moviecatalog.repository;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;

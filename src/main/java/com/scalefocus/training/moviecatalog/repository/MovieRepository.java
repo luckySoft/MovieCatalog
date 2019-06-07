@@ -1,8 +1,7 @@
-package com.scalefocus.training.moviecatalog.Repository;
+package com.scalefocus.training.moviecatalog.repository;
 
 
-import com.scalefocus.training.moviecatalog.Models.Movie;
-import org.bson.types.ObjectId;
+import com.scalefocus.training.moviecatalog.Мodels.Movie;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -11,8 +10,6 @@ import java.util.List;
 
 @Repository
 public interface MovieRepository extends MongoRepository<Movie, String> {
-
-    Movie findById(ObjectId _id);
 
     List<Movie> findByTitleLike(String title);
 
@@ -25,7 +22,7 @@ public interface MovieRepository extends MongoRepository<Movie, String> {
     List<Movie> findByPlotLike(String plot);
 
     @Query("{'imdb.rating' : {$gte : ?0}}")
-    List<Movie> findByImdbRatingGreaterThan(double imdbRating);
+    List<Movie> findByImdbRatingGreaterThan(Double imdbRating);
 
 
 
