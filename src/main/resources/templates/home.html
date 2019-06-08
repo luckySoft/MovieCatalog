@@ -1,88 +1,42 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Getting Started: Serving Web Content</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
     <!-- Custome css -->
-    <link rel="stylesheet" type="text/css" th:href="@{/css/main.css}"/>
+    <link rel="stylesheet" href="static/css/main.css"/>
     <!-- Bootstrap -->
-    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="static/css/bootstrap.min.css">
     <!-- Font Awesome -->
-    <link type="text/css" rel="stylesheet" href="css/font-awesome.min.css">
+    <link rel="stylesheet" href="static/css/font-awesome.min.css">
     <!-- Theme style -->
-    <link type="text/css" rel="stylesheet" href="css/AdminLTE.min.css">
+    <link rel="stylesheet" href="static/css/AdminLTE.min.css">
     <!-- Ionicons -->
-    <link type="text/css" rel="stylesheet" href="css/ionicons.min.css">
+    <link rel="stylesheet" href="static/css/ionicons.min.css">
     <!-- Skins -->
-    <link type="text/css" rel="stylesheet" href="css/_all-skins.min.css">
+    <link rel="stylesheet" href="static/css/_all-skins.min.css">
 
-    <script type="text/javascript" src="/js/script.js"></script>
+    <script type="text/javascript" src="static/js/script.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
 </head>
-<body class="hold-transition skin-blue sidebar-mini">
+<body class="hold-transition skin-blue">
     <div class="wrapper">
     <header class="main-header">
-        <!-- Logo -->
-        <a href="index.html" class="logo">
-            <!-- mini logo for sidebar mini 50x50 pixels -->
-            <span class="logo-mini"><b>A</b>LT</span>
-            <!-- logo for regular state and mobile devices -->
-            <span class="logo-lg"><b>Admin</b>LTE</span>
-        </a>
-        <nav class="navbar navbar-static-top">
-            <div class="user-search-wrapper">
-                <div class="sidebar-form">
-                    <input type="text" id="user-search" class="form-control" placeholder="User...">
-                </div>
-            </div>
-            <div class="dropdown-city">
-                <div class="dropbtn" id="btn-city">All</div>
-                <div id="dropdown-content" class="dropdown-content">
-                    <a href="#" data-city="All">All</a>
-                </div>
-            </div>
-            <div class="btn-search-users">
-                <button class="bg-purple btn-search-users" onclick="searchUser()">Search user</button>
-            </div>
-            <div class="navbar-custom-menu">
-                <ul class="nav navbar-nav">
-                    <li class="dropdown user user-menu">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            <span class="hidden-xs"></span>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <!-- User image -->
-                            <li class="user-header">
-                                <p id="Admin"></p>
-                            </li>
-                            <!-- Menu Footer-->
-                            <li class="user-footer">
-                                <div class="pull-right">
-                                    <a onclick="logout()" class="btn btn-default btn-flat">Sign out</a>
-                                </div>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
-        </nav>
-    </header>
-      <!-- Left side column. contains the logo and sidebar -->
-    <aside class="main-sidebar">
-        <!-- sidebar: style can be found in sidebar.less -->
-        <section class="sidebar">
-            <!-- Sidebar user panel -->
-            <!-- search form -->
+        <div class="user-search-wrapper">
             <div class="sidebar-form">
-                <input type="text" name="q" id="search-bar" class="form-control" placeholder="Search...">
+                <input type="text" id="user-search" class="form-control" placeholder="Search">
             </div>
-            <!-- /.search form -->
-            <ul class="sidebar-menu" data-widget="tree"></ul>
-            <!-- sidebar -->
-        </section>
-        <!-- /.<s></s>idebar -->
-    </aside>
+        </div>
+        <div class="dropdown-city">
+            <div class="dropbtn" id="btn-city">All</div>
+            <div id="dropdown-content" class="dropdown-content">
+                <a href="#" data-city="All">All</a>
+            </div>
+        </div>
+        <div class="btn-search-users">
+            <button class="bg-purple btn-search-users" onclick="send()">Search user</button>
+        </div>
+    </header>
 
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">

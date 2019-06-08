@@ -1,5 +1,5 @@
-*{
-    background-color: '#123142';
+body{
+    ove
 }
 
 .content-header{
@@ -100,4 +100,11 @@
     border-radius: 5%;
     float: left;
     padding: 7px 10px 8px 10px;
+}
+
+.table.table-striped{
+    display: block !important;
+    overflow-x: scroll !important;
+    width: 100vw !important;
+    max-width: 100vw !important;
 }
