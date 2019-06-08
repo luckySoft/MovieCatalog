@@ -31,11 +31,11 @@ public class MovieController {
        return this.repository.findById(id);
     }
 
-    @GetMapping("/")
-    public List<Movie> getAllMovies() {
-
-        return this.repository.findAll();
-    }
+//    @GetMapping("/")
+//    public List<Movie> getAllMovies() {
+//
+//        return this.repository.findAll();
+//    }
 
     @GetMapping("/title={title}")
     public List<Movie> getByTitleLike(@PathVariable String title) {
@@ -99,8 +99,8 @@ public class MovieController {
     @PutMapping("/{id}")
     public void updateMovie(@RequestBody Movie newMovie, @PathVariable String id){
 
-    newMovie.setId(id);
-    this.repository.save(newMovie);
+        newMovie.setId(id);
+        this.repository.save(newMovie);
 
     }
 

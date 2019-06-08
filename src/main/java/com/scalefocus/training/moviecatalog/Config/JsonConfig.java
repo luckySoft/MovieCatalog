@@ -1,4 +1,4 @@
-package com.scalefocus.training.moviecatalog.repository;
+package com.scalefocus.training.moviecatalog.Config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -12,7 +12,7 @@ import java.util.List;
  * COPIED FROM: https://stackoverflow.com/questions/36119852/spring-boot-actuator-pretty-print-json
  */
 @Configuration
-public class MakeSpringPrettyPrintJSON extends WebMvcConfigurationSupport {
+public class JsonConfig extends WebMvcConfigurationSupport {
 
     @Override
     protected void extendMessageConverters( List<HttpMessageConverter<?>> converters ) {
