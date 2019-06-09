@@ -16,8 +16,8 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 /**
  * @author Evgeni Stoykov
  */
+@CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/movies")
 public class MovieController {
 
 
@@ -45,7 +45,7 @@ public class MovieController {
 
     }
 
-    @GetMapping("/")
+    @GetMapping("/movies")
     public List<Movie> getAllMovies() {
 
         return this.repository.findAll();
