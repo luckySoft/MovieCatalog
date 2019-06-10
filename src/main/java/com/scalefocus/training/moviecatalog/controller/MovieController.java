@@ -5,19 +5,20 @@ import com.scalefocus.training.moviecatalog.repository.MovieRepository;
 import com.scalefocus.training.moviecatalog.Мodels.Movie;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
-
-import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 
 /**
  * @author Evgeni Stoykov
  */
-@CrossOrigin(origins = "*")
+
 @RestController
+@RequestMapping("/movies")
 public class MovieController {
 
 
@@ -28,24 +29,11 @@ public class MovieController {
     //GetMappings
 
     @GetMapping("/{id}")
-    public Optional<Movie> getMovieById(@PathVariable String id) throws MovieNotFoundException {
-        Optional<Movie> movie = repository.findById(id);
-
-        try {
-            if (movie.isPresent()) {
-                return movie;
-            } else {
-                throw new MovieNotFoundException("");
-            }
-        } catch (MovieNotFoundException e) {
-        throw new MovieNotFoundException("A movie with ID " + id + " is not present!");
-        }
-
-
-
+    public Movie getMovieById(@PathVariable String id) throws MovieNotFoundException {
+        return repository.findById(id).orElseThrow(()->new MovieNotFoundException(id));
     }
 
-    @GetMapping("/movies")
+    @GetMapping("/")
     public List<Movie> getAllMovies() {
 
         return this.repository.findAll();
@@ -57,7 +45,7 @@ public class MovieController {
 
         List<Movie> newList = repository.findByTitleLike(title);
 
-        try{
+       try{
 
             if(newList.size()!=0){
                 return newList;
@@ -68,6 +56,7 @@ public class MovieController {
         }catch (MovieNotFoundException e){
             throw new MovieNotFoundException("Movie with title " + title + " does not exist!");
         }
+
 
 
 
@@ -101,12 +90,14 @@ public class MovieController {
     }
 
 
-    @GetMapping("/sorted=1")
-    public List<Movie> sortByRating() {
-        return this.repository.findAll(Sort.by(Sort.Direction.ASC, "imdb.rating"));
+    @GetMapping("/sorted=1+page={page}")
+    public List<Movie> sortByRating(@PathVariable Integer page) {
+        Pageable tenPerPage = PageRequest.of(page, 10, Sort.by("imdb.rating").descending());
+
+        Page<Movie> newPage = repository.findAll(tenPerPage);
+
+        return newPage.getContent();
     }
-
-
     //Post Mappings
 
     @PostMapping("/new")
@@ -136,9 +127,19 @@ public class MovieController {
 
     //Get to Json
 
-    @RequestMapping(value = "/toJSON", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8_VALUE)
     public List<Movie> getMovieToJSON() {
         return this.repository.findAll();
+    }
+
+
+    @GetMapping("/page={page}")
+    public List<Movie> getMoviesToPage(@PathVariable Integer page ){
+
+        Pageable pages = PageRequest.of(page,10,Sort.by("year").descending());
+
+        Page<Movie> newPage = repository.findAll(pages);
+
+        return newPage.getContent();
     }
 
 }

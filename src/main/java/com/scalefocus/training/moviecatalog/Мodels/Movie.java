@@ -28,6 +28,8 @@ public class Movie {
     private String poster;
 
 
+    private Double metacritics;
+
     private Imdb imdb;
 
     private Tomato tomato;
@@ -42,7 +44,7 @@ public class Movie {
 
     }
 
-    public Movie(String id, String title, double year, String[] countries, String[] genres, String director, String[] writers, String[] actors, String plot, String poster, Imdb imdb, Tomato tomato, Awards awards, String type, String rated) {
+    public Movie(String id, String title, Double year, String[] countries, String[] genres, String director, String[] writers, String[] actors, String plot, String poster, Double metacritics, Imdb imdb, Tomato tomato, Awards awards, String type, String rated) {
         this.id = id;
         this.title = title;
         this.year = year;
@@ -53,12 +55,15 @@ public class Movie {
         this.actors = actors;
         this.plot = plot;
         this.poster = poster;
+        this.metacritics = metacritics;
         this.imdb = imdb;
         this.tomato = tomato;
         this.awards = awards;
         this.type = type;
         this.rated = rated;
     }
+
+
 
     public String getId() {
         return id;
@@ -179,6 +184,14 @@ public class Movie {
 
     public void setRated(String rated) {
         this.rated = rated;
+    }
+
+    public Double getMetacritics() {
+        return metacritics;
+    }
+
+    public void setMetacritics(Double metacritics) {
+        this.metacritics = metacritics;
     }
 }
 
