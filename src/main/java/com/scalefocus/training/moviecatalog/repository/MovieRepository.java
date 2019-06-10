@@ -11,7 +11,7 @@ import java.util.List;
 @Repository
 public interface MovieRepository extends MongoRepository<Movie, String> {
 
-    List<Movie> findByTitleLike(String title);
+    List<Movie> findByTitleLikeIgnoreCase(String title);
 
     List<Movie> findByActors(String actors);
 

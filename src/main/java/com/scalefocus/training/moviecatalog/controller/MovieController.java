@@ -29,36 +29,50 @@ public class MovieController {
 
     //GetMappings
 
-    @GetMapping("/{id}")
+    @GetMapping("/getById={id}")
     public Movie getMovieById(@PathVariable String id) throws MovieNotFoundException {
-        return repository.findById(id).orElseThrow(()->new MovieNotFoundException(id));
+        return repository.findById(id).orElseThrow(() -> new MovieNotFoundException("Movie with ID " + id + " does not exist"));
     }
 
-    @GetMapping("/")
-    public List<Movie> getAllMovies() {
 
-        return this.repository.findAll();
+    public Integer getAllPagesCount() {
+
+        Pageable pages = PageRequest.of(1, 10);
+
+        Page<Movie> newPage = repository.findAll(pages);
+
+        return newPage.getTotalPages();
+
+    }
+
+    @GetMapping("/movies=all+page={page}")
+    public List<Movie> getAllMovies(@PathVariable Integer page) {
+
+        Pageable pages = PageRequest.of(page, 10, Sort.by("title").descending());
+
+        Page<Movie> newPage = repository.findAll(pages);
+
+        return repository.findAll(pages).getContent();
 
     }
 
     @GetMapping("/title={title}")
     public List<Movie> getByTitleLike(@PathVariable String title) throws MovieNotFoundException {
 
-        List<Movie> newList = repository.findByTitleLike(title);
+       List<Movie> newList=repository.findByTitleLikeIgnoreCase(title);
 
-       try{
 
-            if(newList.size()!=0){
+        try {
+
+            if (newList.size() != 0) {
                 return newList;
-            }else{
+            } else {
                 throw new MovieNotFoundException("");
             }
 
-        }catch (MovieNotFoundException e){
+        } catch (MovieNotFoundException e) {
             throw new MovieNotFoundException("Movie with title " + title + " does not exist!");
         }
-
-
 
 
     }
@@ -134,9 +148,9 @@ public class MovieController {
 
 
     @GetMapping("/page={page}")
-    public List<Movie> getMoviesToPage(@PathVariable Integer page ){
+    public List<Movie> getMoviesToPage(@PathVariable Integer page) {
 
-        Pageable pages = PageRequest.of(page,10,Sort.by("year").descending());
+        Pageable pages = PageRequest.of(page, 10, Sort.by("year").descending());
 
         Page<Movie> newPage = repository.findAll(pages);
 
