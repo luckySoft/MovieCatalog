@@ -21,28 +21,32 @@
 </head>
 <body class="hold-transition skin-blue">
     <div class="wrapper">
-    <header class="main-header">
-        <div class="user-search-wrapper">
-            <div class="sidebar-form">
-                <input type="text" id="movie-search" class="form-control" placeholder="Search">
+        <header class="main-header">
+            <div class="user-search-wrapper">
+                <div class="sidebar-form">
+                    <input type="text" id="movie-search" class="form-control" placeholder="Search">
+                </div>
             </div>
-        </div>
-        <div class="dropdown-city">
-            <div class="dropbtn" id="btn-options">Title</div>
-            <div id="dropdown-content" class="dropdown-content">
-                <a href="#" data-city="Title">Title</a>
-                <a href="#" data-city="Genre">Genre</a>
-                <a href="#" data-city="Rating">Rating</a>
+            <div class="dropdown-city">
+                <div class="dropbtn" id="btn-options" data-city="Title">Title</div>
+                <div id="dropdown-content" class="dropdown-content">
+                    <a href="#" data-city="Genres">Genres</a>
+                    <a href="#" data-city="Rating">Rating</a>
+                </div>
             </div>
+            <div class="btn-search-users">
+                <button class="bg-purple btn-search-users" onclick="send()">Show movies</button>
+            </div>
+        </header>
+        <div class="content-wrapper">
+            <div id="tb"></div>
         </div>
-        <div class="btn-search-users">
-            <button class="bg-purple btn-search-users" onclick="send()">Show movies</button>
-        </div>
-    </header>
-    <div class="content-wrapper">
-        <div id="tb"></div>
-    </div>
-    </div>
 
+        <div class="shadow" id="shadow">asdf</div>
+        <div class="wrapper-info" id="wrapper-info">
+
+        </div>
+
+    </div>
 </body>
 </html>

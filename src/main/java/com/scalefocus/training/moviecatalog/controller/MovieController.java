@@ -19,13 +19,11 @@ public class MovieController {
 
     private final MovieServices services;
 
-
     public MovieController(MovieServices services) {
         this.services = services;
     }
 
     //GetMappings
-
     @GetMapping("/id={id}")
     public Movie getMovieById(@PathVariable String id) throws MovieNotFoundException {
         return services.getById(id);
@@ -38,7 +36,7 @@ public class MovieController {
 
     @GetMapping("/title={title}+page={page}")
     public List<Movie> getByTitleLike(@PathVariable String title, @PathVariable Integer page) throws MovieNotFoundException {
-        return services.getByTitleLike(title,page);
+        return services.getByTitleLike(title, page);
     }
 
     @GetMapping("/actors={actors}+page={page}")
@@ -51,7 +49,6 @@ public class MovieController {
     public List<Movie> getByGenres(@PathVariable String genre, @PathVariable Integer page) throws  MovieNotFoundException{
         return services.getByGenres(genre,page);
     }
-
 
     @GetMapping("/plot={plot}+page={page}")
     public List<Movie> getByPlotLike(@PathVariable String plot,@PathVariable Integer page) throws MovieNotFoundException {
