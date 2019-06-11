@@ -27,48 +27,48 @@ public class MovieController {
 
     //GetMappings
 
-    @GetMapping("/{id}")
+    @GetMapping("/id={id}")
     public Movie getMovieById(@PathVariable String id) throws MovieNotFoundException {
         return services.getById(id);
     }
 
 
-    @GetMapping("/movies=all?page={page}")
-    public List<Movie> getAllMovies(@PathVariable Integer page) {
+    @GetMapping("/movies=all+page={page}")
+    public List<Movie> getAllMovies(@PathVariable Integer page) throws MovieNotFoundException {
         return services.getAll(page);
     }
 
-    @GetMapping("/title={title}")
-    public List<Movie> getByTitleLike(@PathVariable String title) throws MovieNotFoundException {
-        return services.getByTitleLike(title);
+    @GetMapping("/title={title}+page={page}")
+    public List<Movie> getByTitleLike(@PathVariable String title, @PathVariable Integer page) throws MovieNotFoundException {
+        return services.getByTitleLike(title,page);
     }
 
-    @GetMapping("/actor={actors}")
-    public List<Movie> getByActors(@PathVariable String actors) {
-        return services.getByActors(actors);
-    }
-
-
-    @GetMapping("/genres={genres}")
-    public List<Movie> getByGenres(@PathVariable String genres) {
-        return services.getByGenres(genres);
+    @GetMapping("/actors={actors}+page={page}")
+    public List<Movie> getByActors(@PathVariable String actors, @PathVariable Integer page) throws MovieNotFoundException {
+        return services.getByActors(actors,page);
     }
 
 
-    @GetMapping("/plot={plot}")
-    public List<Movie> getByPlotLike(@PathVariable String plot) {
-        return services.getByPlotLike(plot);
+    @GetMapping("/genre={genre}+page={page}")
+    public List<Movie> getByGenres(@PathVariable String genre, @PathVariable Integer page) throws  MovieNotFoundException{
+        return services.getByGenres(genre,page);
     }
 
 
-    @GetMapping("/imdbRating>={imdbRating}")
-    public List<Movie> getByImdbRating(@PathVariable Double imdbRating) {
-        return services.getByImdbRating(imdbRating);
+    @GetMapping("/plot={plot}+page={page}")
+    public List<Movie> getByPlotLike(@PathVariable String plot,@PathVariable Integer page) throws MovieNotFoundException {
+        return services.getByPlotLike(plot,page);
+    }
+
+
+    @GetMapping("/imdbRating>={imdbRating}+page={page}")
+    public List<Movie> getByImdbRating(@PathVariable Double imdbRating, @PathVariable Integer page) throws MovieNotFoundException{
+        return services.getByImdbRating(imdbRating,page);
     }
 
 
     @GetMapping("/sorted=1?page={page}")
-    public List<Movie> sortByRating(@PathVariable Integer page) {
+    public List<Movie> sortByRating(@PathVariable Integer page) throws MovieNotFoundException {
         return services.sortByRating(page);
     }
     //Post Mapping
@@ -91,7 +91,7 @@ public class MovieController {
 
     //Delete Mappings
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    @DeleteMapping("/{id}")
     public void deleteMovie(@PathVariable String id) throws MovieNotFoundException{
         services.deleteMovie(id);
     }

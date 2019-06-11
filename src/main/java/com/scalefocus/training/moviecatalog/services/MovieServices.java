@@ -39,21 +39,29 @@ public class MovieServices {
     }
 
 
-    public List<Movie> getAll(Integer page) {
-        Pageable tenPerPage = PageRequest.of(page, 10, Sort.by("year").descending());
+    public List<Movie> getAll(Integer page) throws MovieNotFoundException {
+        try {
+            Pageable tenPerPage = PageRequest.of(page, 10, Sort.by("year").descending());
 
-        Page<Movie> newPage = repository.findAll(tenPerPage);
+            Page<Movie> newPage = repository.findAll(tenPerPage);
 
-        return repository.findAll(tenPerPage).getContent();
-
+            if (newPage.hasContent())
+                return newPage.getContent();
+            else {
+                throw new MovieNotFoundException("");
+            }
+        } catch (MovieNotFoundException ex) {
+            throw new MovieNotFoundException("There are no movies!");
+        }
 
     }
 
 
-    public List<Movie> getByTitleLike(String title) throws MovieNotFoundException {
+    public List<Movie> getByTitleLike(String title, Integer page) throws MovieNotFoundException {
 
-        List<Movie> newList = repository.findByTitleLikeIgnoreCase(title);
+        Pageable tenPerPage = PageRequest.of(page, 10);
 
+        List<Movie> newList = repository.findByTitleLikeIgnoreCase(title, tenPerPage);
 
         try {
 
@@ -64,38 +72,105 @@ public class MovieServices {
             }
 
         } catch (MovieNotFoundException e) {
-            throw new MovieNotFoundException("Movie with title " + title + " does not exist!");
+            throw new MovieNotFoundException("Movies with title " + title + " are not present!");
         }
 
 
     }
 
-    public List<Movie> getByActors(String actors) {
+    public List<Movie> getByActors(String actors, Integer page) throws MovieNotFoundException {
+        Pageable tenPerPage = PageRequest.of(page, 10);
+        List<Movie> newList = repository.findByActorsLikeIgnoreCase(actors,tenPerPage);
 
-        return this.repository.findByActors(actors);
+        try {
+
+
+            if (newList.size() != 0) {
+                return newList;
+            } else {
+                throw new MovieNotFoundException("");
+            }
+
+        } catch (MovieNotFoundException ex) {
+            throw new MovieNotFoundException("Movies, starring " + actors + " are not present!");
+        }
+
 
     }
 
-    public List<Movie> getByGenres(String genres) {
+    public List<Movie> getByGenres(String genres, Integer page) throws MovieNotFoundException {
+        Pageable tenPerPage = PageRequest.of(page, 10);
+        List<Movie> newList = repository.findByGenresIgnoreCase(genres, tenPerPage);
 
-        return repository.findByGenres(genres);
+
+        try {
+
+            if (newList.size() != 0) {
+                return newList;
+            } else {
+                throw new MovieNotFoundException("");
+            }
+
+        } catch (MovieNotFoundException ex) {
+            throw new MovieNotFoundException("Movies with genre " + genres + " are not present1");
+        }
+
+
     }
 
-    public List<Movie> getByPlotLike(String plot) {
+    public List<Movie> getByPlotLike(String plot, Integer page) throws MovieNotFoundException {
+        Pageable tenPerPage = PageRequest.of(page, 10);
 
-        return repository.findByPlotLike(plot);
+        try {
+            List<Movie> newList = repository.findByPlotLikeIgnoreCase(plot, tenPerPage);
+
+            if (newList.size() != 0) {
+                return newList;
+            } else {
+                throw new MovieNotFoundException("");
+            }
+
+        } catch (MovieNotFoundException ex) {
+            throw new MovieNotFoundException("Movies with plot " + plot + " are not present!");
+        }
+
     }
 
-    public List<Movie> getByImdbRating(Double imdbRating) {
-        return repository.findByImdbRatingGreaterThan(imdbRating);
+    public List<Movie> getByImdbRating(Double imdbRating, Integer page) throws MovieNotFoundException {
+        Pageable tenPerPage = PageRequest.of(page, 10,Sort.by("imdb.rating").descending());
+
+        try {
+            List<Movie> newList = repository.findByImdbRatingGreaterThan(imdbRating, tenPerPage);
+
+            if (newList.size() != 0) {
+                return newList;
+            } else {
+                throw new MovieNotFoundException("");
+            }
+
+        } catch (MovieNotFoundException ex) {
+            throw new MovieNotFoundException("Movies with IMDB rating greather than, or equal " + imdbRating + " are not present!");
+        }
+
     }
 
-    public List<Movie> sortByRating(Integer page) {
-        Pageable tenPerPage = PageRequest.of(page, 10, Sort.by("imdb.rating").descending());
+    public List<Movie> sortByRating(Integer page) throws MovieNotFoundException {
 
-        Page<Movie> newPage = repository.findAll(tenPerPage);
+        try {
+            Pageable tenPerPage = PageRequest.of(page, 10, Sort.by("imdb.rating").descending());
 
-        return newPage.getContent();
+            Page<Movie> newPage = repository.findAll(tenPerPage);
+
+            if (newPage.hasContent()) {
+                return newPage.getContent();
+            } else {
+                throw new MovieNotFoundException("");
+            }
+        } catch (MovieNotFoundException ex) {
+            throw new MovieNotFoundException("There are no movies at the catalog!");
+        }
+
+
     }
 
     //Update Movie
@@ -111,22 +186,12 @@ public class MovieServices {
     //Delete Movie
 
     public void deleteMovie(String id) throws MovieNotFoundException {
-        try {
-            if (repository.findById(id) != null) {
-                repository.deleteById(id);
-            } else {
-                throw new MovieNotFoundException("");
-            }
-        } catch (MovieNotFoundException exc) {
-            throw new MovieNotFoundException("Cant delete! A movie with ID " + id + " is not present!");
-        }
+        repository.deleteById(id);
     }
 
     //Post Mappings
 
     public void postMovie(Movie newMovie) {
-
-
         repository.save(newMovie);
     }
 
