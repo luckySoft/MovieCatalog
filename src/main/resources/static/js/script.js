@@ -1,5 +1,6 @@
 var movies = [];
 var selectedMovie;
+var page=1;
 
 window.onload = () => {
     fillDropdownList();
@@ -27,7 +28,7 @@ function send() {
     var category = $('#btn-options').text().toLowerCase();
 
     $.ajax({
-        url: url + `/${category}=${searchTerm}`,
+        url: url + `/${category}=${searchTerm}+page=${page}`,
         type: 'GET',
         success: (result) => {
             fillMovieTable(result);

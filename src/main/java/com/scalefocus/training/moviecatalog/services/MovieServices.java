@@ -3,13 +3,12 @@ package com.scalefocus.training.moviecatalog.services;
 import com.scalefocus.training.moviecatalog.exception.MovieNotFoundException;
 import com.scalefocus.training.moviecatalog.repository.MovieRepository;
 import com.scalefocus.training.moviecatalog.Мodels.Movie;
+import com.scalefocus.training.moviecatalog.Мodels.MoviePages;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class MovieServices {
@@ -17,20 +16,11 @@ public class MovieServices {
 
     private final MovieRepository repository;
 
+    private final int size = 10;
+
 
     public MovieServices(MovieRepository repository) {
         this.repository = repository;
-    }
-
-
-    public Integer getAllPagesCount() {
-
-        Pageable pages = PageRequest.of(1, 10);
-
-        Page<Movie> newPage = repository.findAll(pages);
-
-        return newPage.getTotalPages();
-
     }
 
 
@@ -39,139 +29,100 @@ public class MovieServices {
     }
 
 
-    public List<Movie> getAll(Integer page) throws MovieNotFoundException {
-        try {
-            Pageable tenPerPage = PageRequest.of(page, 10, Sort.by("year").descending());
+    public MoviePages getAll(Integer page) throws MovieNotFoundException {
 
-            Page<Movie> newPage = repository.findAll(tenPerPage);
+        Pageable tenPerPage = PageRequest.of(page, size, Sort.by("year").descending());
 
-            if (newPage.hasContent())
-                return newPage.getContent();
-            else {
-                throw new MovieNotFoundException("");
-            }
-        } catch (MovieNotFoundException ex) {
-            throw new MovieNotFoundException("There are no movies!");
-        }
+        Page<Movie> moviePage = repository.findAll(tenPerPage);
 
+        if (!moviePage.hasContent()) throw new MovieNotFoundException("There are no movies!");
+
+
+        return new MoviePages((long) moviePage.getTotalPages(), moviePage.getContent());
     }
 
 
-    public List<Movie> getByTitleLike(String title, Integer page) throws MovieNotFoundException {
+    public MoviePages getByTitleLike(String title, Integer page) throws MovieNotFoundException {
 
-        Pageable tenPerPage = PageRequest.of(page, 10);
+        Pageable tenPerPage = PageRequest.of(page, size);
 
-        List<Movie> newList = repository.findByTitleLikeIgnoreCase(title, tenPerPage);
+        Page<Movie> moviePage = repository.findByTitleLikeIgnoreCase(title, tenPerPage);
 
-        try {
-
-            if (newList.size() != 0) {
-                return newList;
-            } else {
-                throw new MovieNotFoundException("");
-            }
-
-        } catch (MovieNotFoundException e) {
+        if (!moviePage.hasContent())
             throw new MovieNotFoundException("Movies with title " + title + " are not present!");
-        }
 
-
+        return new MoviePages((long) moviePage.getTotalPages(), moviePage.getContent());
     }
 
-    public List<Movie> getByActors(String actors, Integer page) throws MovieNotFoundException {
-        Pageable tenPerPage = PageRequest.of(page, 10);
-        List<Movie> newList = repository.findByActorsLikeIgnoreCase(actors,tenPerPage);
+    public MoviePages getByActors(String actors, Integer page) throws MovieNotFoundException {
+        Pageable tenPerPage = PageRequest.of(page, size);
 
-        try {
+        Page<Movie> moviePage = repository.findByActorsRegex(actors, tenPerPage);
 
-
-            if (newList.size() != 0) {
-                return newList;
-            } else {
-                throw new MovieNotFoundException("");
-            }
-
-        } catch (MovieNotFoundException ex) {
+        if (!moviePage.hasContent())
             throw new MovieNotFoundException("Movies, starring " + actors + " are not present!");
-        }
 
+
+        return new MoviePages((long) moviePage.getTotalPages(), moviePage.getContent());
+    }
+
+    public MoviePages getByGenres(String genres, Integer page) throws MovieNotFoundException {
+        Pageable tenPerPage = PageRequest.of(page, size);
+        Page<Movie> moviePage = repository.findByGenresIgnoreCase(genres, tenPerPage);
+
+
+        if (!moviePage.hasContent())
+            throw new MovieNotFoundException("Movies with genre " + genres + " are not present!");
+
+
+        return new MoviePages((long) moviePage.getTotalPages(), moviePage.getContent());
 
     }
 
-    public List<Movie> getByGenres(String genres, Integer page) throws MovieNotFoundException {
-        Pageable tenPerPage = PageRequest.of(page, 10);
-        List<Movie> newList = repository.findByGenresIgnoreCase(genres, tenPerPage);
+    public MoviePages getByPlotLike(String plot, Integer page) throws MovieNotFoundException {
+        Pageable tenPerPage = PageRequest.of(page, size);
 
 
-        try {
+        Page<Movie> moviePage = repository.findByPlotLikeIgnoreCase(plot, tenPerPage);
 
-            if (newList.size() != 0) {
-                return newList;
-            } else {
-                throw new MovieNotFoundException("");
-            }
-
-        } catch (MovieNotFoundException ex) {
-            throw new MovieNotFoundException("Movies with genre " + genres + " are not present1");
-        }
-
-
-    }
-
-    public List<Movie> getByPlotLike(String plot, Integer page) throws MovieNotFoundException {
-        Pageable tenPerPage = PageRequest.of(page, 10);
-
-        try {
-            List<Movie> newList = repository.findByPlotLikeIgnoreCase(plot, tenPerPage);
-
-            if (newList.size() != 0) {
-                return newList;
-            } else {
-                throw new MovieNotFoundException("");
-            }
-
-        } catch (MovieNotFoundException ex) {
+        if (!moviePage.hasContent())
             throw new MovieNotFoundException("Movies with plot " + plot + " are not present!");
-        }
+
+        return new MoviePages((long) moviePage.getTotalPages(), moviePage.getContent());
+
 
     }
 
-    public List<Movie> getByImdbRating(Double imdbRating, Integer page) throws MovieNotFoundException {
-        Pageable tenPerPage = PageRequest.of(page, 10,Sort.by("imdb.rating").descending());
+    public MoviePages getByImdbRating(Double imdbRating, Integer page) throws MovieNotFoundException {
+        Pageable tenPerPage = PageRequest.of(page, size, Sort.by("imdb.rating").descending());
 
-        try {
-            List<Movie> newList = repository.findByImdbRatingGreaterThan(imdbRating, tenPerPage);
 
-            if (newList.size() != 0) {
-                return newList;
-            } else {
-                throw new MovieNotFoundException("");
-            }
+        Page<Movie> moviePage = repository.findByImdbRatingGreaterThan(imdbRating, tenPerPage);
 
-        } catch (MovieNotFoundException ex) {
+        if (!moviePage.hasContent()) {
+
             throw new MovieNotFoundException("Movies with IMDB rating greather than, or equal " + imdbRating + " are not present!");
-        }
 
+        }
+        return new MoviePages((long) moviePage.getTotalPages(), moviePage.getContent());
     }
 
-    public List<Movie> sortByRating(Integer page) throws MovieNotFoundException {
+    public MoviePages sortByRating(Integer page) throws MovieNotFoundException {
 
-        try {
-            Pageable tenPerPage = PageRequest.of(page, 10, Sort.by("imdb.rating").descending());
 
-            Page<Movie> newPage = repository.findAll(tenPerPage);
+        Pageable tenPerPage = PageRequest.of(page, size, Sort.by("imdb.rating").descending());
 
-            if (newPage.hasContent()) {
-                return newPage.getContent();
-            } else {
-                throw new MovieNotFoundException("");
-            }
-        } catch (MovieNotFoundException ex) {
+        Page<Movie> movieList = repository.findAll(tenPerPage);
+
+        if (!movieList.hasContent()) {
+
             throw new MovieNotFoundException("There are no movies at the catalog!");
         }
 
 
+        return new MoviePages((long) movieList.getTotalPages(), movieList.getContent());
     }
+
 
     //Update Movie
 
@@ -194,5 +145,5 @@ public class MovieServices {
     public void postMovie(Movie newMovie) {
         repository.save(newMovie);
     }
-
 }
+

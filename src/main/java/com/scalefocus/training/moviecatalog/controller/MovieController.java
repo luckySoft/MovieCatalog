@@ -3,9 +3,8 @@ package com.scalefocus.training.moviecatalog.controller;
 import com.scalefocus.training.moviecatalog.exception.MovieNotFoundException;
 import com.scalefocus.training.moviecatalog.services.MovieServices;
 import com.scalefocus.training.moviecatalog.Мodels.Movie;
+import com.scalefocus.training.moviecatalog.Мodels.MoviePages;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 /**
  * @author Evgeni Stoykov
@@ -24,44 +23,44 @@ public class MovieController {
     }
 
     //GetMappings
-    @GetMapping("/id={id}")
-    public Movie getMovieById(@PathVariable String id) throws MovieNotFoundException {
+    @GetMapping(params = {"id"})
+    public Movie getMovieById(@RequestParam("id") String id) throws MovieNotFoundException {
         return services.getById(id);
     }
 
-    @GetMapping("/movies=all+page={page}")
-    public List<Movie> getAllMovies(@PathVariable Integer page) throws MovieNotFoundException {
+    @GetMapping(params = {"page"})
+    public MoviePages getAllMovies(@RequestParam("page") Integer page) throws MovieNotFoundException {
         return services.getAll(page);
     }
 
-    @GetMapping("/title={title}+page={page}")
-    public List<Movie> getByTitleLike(@PathVariable String title, @PathVariable Integer page) throws MovieNotFoundException {
+    @GetMapping(params = {"title","page"})
+    public MoviePages getByTitleLike(@RequestParam("title") String title, @RequestParam("page") Integer page) throws MovieNotFoundException {
         return services.getByTitleLike(title, page);
     }
 
-    @GetMapping("/actors={actors}+page={page}")
-    public List<Movie> getByActors(@PathVariable String actors, @PathVariable Integer page) throws MovieNotFoundException {
+    @GetMapping(params = {"actors", "page"})
+    public MoviePages getByActors(@RequestParam String actors, @RequestParam Integer page) throws MovieNotFoundException {
         return services.getByActors(actors,page);
     }
 
 
-    @GetMapping("/genre={genre}+page={page}")
-    public List<Movie> getByGenres(@PathVariable String genre, @PathVariable Integer page) throws  MovieNotFoundException{
-        return services.getByGenres(genre,page);
+    @GetMapping(params = {"genres", "page"})
+    public MoviePages getByGenres(@RequestParam String genres, @RequestParam Integer page) throws  MovieNotFoundException{
+        return services.getByGenres(genres,page);
     }
 
-    @GetMapping("/plot={plot}+page={page}")
-    public List<Movie> getByPlotLike(@PathVariable String plot,@PathVariable Integer page) throws MovieNotFoundException {
+    @GetMapping(params = {"plot","page"})
+    public MoviePages getByPlotLike(@RequestParam String plot,@RequestParam Integer page) throws MovieNotFoundException {
         return services.getByPlotLike(plot,page);
     }
 
-    @GetMapping("/imdbRating>={imdbRating}+page={page}")
-    public List<Movie> getByImdbRating(@PathVariable Double imdbRating, @PathVariable Integer page) throws MovieNotFoundException{
+    @GetMapping(params = {"imdbRating","page"})
+    public MoviePages getByImdbRating(@RequestParam Double imdbRating, @RequestParam Integer page) throws MovieNotFoundException{
         return services.getByImdbRating(imdbRating,page);
     }
 
-    @GetMapping("/sorted=1?page={page}")
-    public List<Movie> sortByRating(@PathVariable Integer page) throws MovieNotFoundException {
+    @GetMapping(params = {"sorted=1","page"})
+    public MoviePages sortByRating(@RequestParam Integer page) throws MovieNotFoundException {
         return services.sortByRating(page);
     }
     //Post Mapping
@@ -75,8 +74,8 @@ public class MovieController {
 
     //Put Mapping
 
-    @PutMapping("/{id}")
-    public void updateMovie(@RequestBody Movie newMovie, @PathVariable String id) {
+    @PutMapping(params ="id")
+    public void updateMovie(@RequestBody Movie newMovie, @RequestParam String id) {
 
         services.updateMovie(newMovie, id);
 
@@ -84,8 +83,8 @@ public class MovieController {
 
     //Delete Mappings
 
-    @DeleteMapping("/{id}")
-    public void deleteMovie(@PathVariable String id) throws MovieNotFoundException{
+    @DeleteMapping(params = "id")
+    public void deleteMovie(@RequestParam String id) throws MovieNotFoundException{
         services.deleteMovie(id);
     }
 }
