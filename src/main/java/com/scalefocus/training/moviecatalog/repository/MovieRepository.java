@@ -14,6 +14,8 @@ public interface MovieRepository extends MongoRepository<Movie, String> {
 
     List<Movie> findByTitleLikeIgnoreCase(String title, Pageable pageable);
 
+    List<Movie> findByTitleLikeIgnoreCase(String title);
+
     List<Movie> findByActorsLikeIgnoreCase(String actors, Pageable pageable);
 
     List<Movie> findByGenresIgnoreCase(String genres, Pageable pageable);

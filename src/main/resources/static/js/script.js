@@ -1,33 +1,31 @@
 var movies = [];
-var selectedMovie;
+var page = 0;
+var maxPage = Infinity;
 
 window.onload = () => {
-    fillDropdownList();
+    ChangeDropdown();
     eventListeners();
-}
-
-function fillDropdownList() {
-    $('#dropdown-content a').click(function() {
-        const txt = $(this).attr('data-city');
-        const lastSelected = $('#btn-options').text();
-
-        $('#btn-options').text(txt);
-        $('#btn-options').attr('data-city', txt);
-
-        $(this).text(lastSelected);
-        $(this).attr('data-city', lastSelected);
-    });
+    send();
 }
 
 function send() {
 
-    var url = `http://localhost:8080/movies`;
+    var url = `http://localhost:8080`;
 
-    var searchTerm = $('#movie-search').val();
-    var category = $('#btn-options').text().toLowerCase();
+    var fullUrl;
+
+    var category = $('#btn-options').attr('search-category');
+    if (category != 'movies') {
+        var searchTerm = $('#movie-search').val();
+        fullUrl = `${url}/${category}=${searchTerm}&page=${page}`;
+    } else {
+        fullUrl = `${url}/${category}?page=${page}`;
+    }
+
+    //console.log(fullUrl);
 
     $.ajax({
-        url: url + `/${category}=${searchTerm}`,
+        url: fullUrl,
         type: 'GET',
         success: (result) => {
             fillMovieTable(result);
@@ -38,53 +36,70 @@ function send() {
     });
 }
 
-function fillMovieTable(result) {
+function fillMovieTable(r) {
+    movies = [];
+
+    var result = r.movies;
+    maxPage = r.pages;
+
 
     $('#tb').empty();
     $('#tb').append(`
-        <section class="content-header">Users</section>
         <table class="table table-striped" id="movieData">
             <tbody>
                 <tr>
                     <th><div class="th">Poster</div></th>
                     <th><div class="th">Title</div></th>
                     <th><div class="th">Year</div></th>
-                    <th><div class="th">Rated</div></th>
+                    <th><div class="th">IMDB Rating</div></th>
                     <th><div class="th">Countries</div></th>
                     <th><div class="th">Director</div></th>
                     <th><div class="th">writers</div></th>
                 </tr>
             </tbody>
+            <ul class="pagination pagination-sm pull-right" style="margin-right: 6% !important">
+                <li><a id="page-back"> << </a></li>
+                <li><a>Page: ${page + 1} </a></li>
+                <li><a id="page-forward"> >> </a></li>
+            </ul>
         </table>
     `);
 
-    //<th><div class="th">Runtime</div></th>
-    // <th><div class="th">Actors</div></th>
-    // <th><div class="th">Plot</div></th>
-    // <th><div class="th">Poster</div></th>
-    // <th><div class="th">IMDB</div></th>
-    // <th><div class="th">Tomato</div></th>
-    // <th><div class="th">Metacritic</div></th>
-    // <th><div class="th">Awards</div></th>
-    // <th><div class="th">Type</div></th>
+    var img = [];
+
+    for (var i = 0; i < result.length; i++) {
+        img.push(result[i]['poster']);
+    }
+
+    var imagesLoaded = 0;
+    var totalImages = result.length;
+
+    $('img').each(function(idx, img) {
+        $('<img>').on('load', imageLoaded).attr('src', $(img).attr('src'));
+    });
+
+    function imageLoaded() {
+        imagesLoaded++;
+        if (imagesLoaded == totalImages) {
+            allImagesLoaded();
+        }
+    }
 
     for (var i = 0; i < result.length; i++) {
 
         movies.push(result[i]);
 
         var id = result[i]['id'];
-        let urlPoster = result[i]['poster'];
-        var poster = new Image();
-        poster.src = urlPoster;
-        if (poster.width == 0) {
+
+        var poster = img[i];
+        if (poster == null) {
             poster = '../static/default.jpg';
-        } else {
-            poster = urlPoster;
+            movies[i]['poster'] = poster;
         }
 
         let title = result[i]['title'];
         let year = result[i]['year'];
-        let rated = result[i]['rated'];
+        let rated = result[i]['imdb'].rating;
         let contries = result[i]['countries'];
         let director = result[i]['director'];
         let writers = result[i]['writers'];
@@ -104,6 +119,197 @@ function fillMovieTable(result) {
     }
 }
 
+function loadInfo(row) {
+    $('#wrapper-info').empty();
+    $('#shadow').css('visibility', 'visible');
+    $('#wrapper-info').css('visibility', 'visible');
+
+    var selectedMovie;
+    var movieName = row.closest('tr').attr('data-id');
+    for (var i = 0; i < movies.length; i++) {
+        if (movies[i].id == movieName) {
+            selectedMovie = movies[i];
+        }
+    }
+
+    var infoTemplate= `<div class="info-container">`;
+    infoTemplate += `
+        <div class="info-title"> ${selectedMovie.title} </div>
+        <div class="info-poster"><img src=" ${selectedMovie.poster} " height="200px" width="200px"> </div>
+    `;
+
+    if (selectedMovie.imdb != null) {
+        let imdbResult = selectedMovie['imdb'];
+        let imdb = getObjProp(imdbResult);
+        if (imdb != '') {
+            infoTemplate += `
+                <div class="info-txt">
+                    <div class="info-txt-title">IMDB</div>
+                    <p>${imdb}</p>
+                </div>
+            `;
+        }
+    }
+
+    if (selectedMovie.tomato != null) {
+        let tomatoResult = selectedMovie['tomato'];
+        let tomato = getObjProp(tomatoResult);
+        if (tomato != '') {
+            infoTemplate += `
+                <div class="info-txt">
+                    <div class="info-txt-title">Tomato</div>
+                    <p>${tomato} </p>
+                </div>
+            `;
+        }
+    }
+
+    if (selectedMovie.awards != null) {
+        let awardsResult = selectedMovie['awards'];
+        let awards = getObjProp(awardsResult);
+        if (awards != '') {
+            infoTemplate += `
+                <div class="info-txt">
+                    <div class="info-txt-title">Awards</div>
+                    <p>${awards}</p>
+                </div>
+            `;
+        }
+    }
+
+    if (selectedMovie.rated != null && selectedMovie.rated != ' ') {
+        infoTemplate += `
+            <div class="info-txt">
+                <div class="info-txt-title">Rated</div>
+                <p>${selectedMovie.rated} </p>
+            </div>
+        `;
+    }
+
+    if (selectedMovie.metacritics != null && selectedMovie.metacritics != ' ') {
+        infoTemplate += `
+            <div class="info-txt">
+                <div class="info-txt-title">Metacritics</div>
+                <p>${selectedMovie.metacritics}</p>
+            </div>
+        `;
+    }
+
+    if (selectedMovie.year != null && selectedMovie.year != ' ') {
+        infoTemplate += `
+            <div class="info-txt">
+                <div class="info-txt-title">Year</div>
+                <p>${selectedMovie.year} </p>
+            </div>
+        `;
+    }
+
+    if (selectedMovie.countries != null && selectedMovie.countries != ' ') {
+        infoTemplate += `
+            <div class="info-txt">
+                <div class="info-txt-title">Countries</div>
+                <p>${selectedMovie.countries}</p>
+            </div>
+        `;
+    }
+
+    if (selectedMovie.genres != null && selectedMovie.genres != ' ') {
+        infoTemplate += `
+            <div class="info-txt">
+                <div class="info-txt-title">Genres</div>
+                <p>${selectedMovie.genres} </p>
+            </div>
+        `;
+    }
+
+    if (selectedMovie.director != null && selectedMovie.director != ' ') {
+        infoTemplate += `
+            <div class="info-txt">
+                <div class="info-txt-title">Director</div>
+                <p>${selectedMovie.director} </p>
+            </div>
+        `;
+    }
+
+    if (selectedMovie.writers != null && selectedMovie.writers.length > 0) {
+        infoTemplate += `
+            <div class="info-txt">
+                <div class="info-txt-title">Writers</div>
+                <p>${selectedMovie.writers} </p>
+            </div>
+        `;
+    }
+
+    if (selectedMovie.actors != null && selectedMovie.actors.length > 0) {
+        infoTemplate += `
+        <div class="info-txt">
+            <div class="info-txt-title">Actors</div>
+            <p>${selectedMovie.actors} </p>
+        </div>
+        `;
+    }
+
+    if (selectedMovie.plot != null && selectedMovie.plot != ' ') {
+        infoTemplate += `
+            <div class="info-txt">
+                <div class="info-txt-title">Plot</div>
+                <p>${selectedMovie.plot} </p>
+            </div>
+        `;
+    }
+
+    if (selectedMovie.type != null && selectedMovie.type != ' ') {
+        infoTemplate += `
+            <div class="info-txt">
+                <div class="info-txt-title">Type</div>
+                <p>${selectedMovie.type} </p>
+            </div>
+        `;
+    }
+
+    infoTemplate += '</div>';
+
+    $('.wrapper-info').append(infoTemplate);
+
+    // $('.wrapper-info').append(`
+    //     <div class="info-txt-buttons">
+    //         <button class="btn btn-primary btn-flat" name="AddUser">Add</button>
+    //         <button class="btn btn-danger btn-flat" name="Cancel">Delete</button>
+    //     </div>
+    // `);
+
+    //console.log(selectedMovie);
+
+}
+
+function getObjProp(obj) {
+    var result = '';
+    if (obj != null) {
+        for (var key in obj) {
+            if (obj.hasOwnProperty(key) && obj[key] != null) {
+                result += key + ' : ' + obj[key] + '<br>';
+            }
+        }
+    }
+    return result;
+}
+
+function ChangeDropdown() {
+    $('#dropdown-content a').click(function() {
+        const txt = $(this).text();
+        const atr = $(this).attr('search-category');
+        const lastSelectedText = $('#btn-options').text();
+        const lastSelectedAtr = $('#btn-options').attr('search-category')
+
+        $('#btn-options').text(txt);
+        $('#btn-options').attr('search-category', atr);
+
+        $(this).text(lastSelectedText);
+        $(this).attr('search-category', lastSelectedAtr);
+    });
+}
+
+
 function eventListeners() {
     $('#shadow').click( function() {
         $(this).css('visibility', 'hidden');
@@ -113,28 +319,32 @@ function eventListeners() {
     $(document).on('click', '#row', function(e) {
         loadInfo($(e.target).parent());
     });
-}
 
-function loadInfo(row) {
-    $('#wrapper-info').empty();
-    $('#shadow').css('visibility', 'visible');
-    $('#wrapper-info').css('visibility', 'visible');
-
-    var movieName = row.closest('tr').attr('data-id');
-
-    for (var i = 0; i < movies.length; i++) {
-        //console.log('|'+ movies[i].title + '|' + movieName + '|');
-        if (movies[i].id == movieName) {
-            selectedMovie = movies[i];
+    $(document).on('click', '#page-back', function() {
+        if (page - 1 >= 0) {
+            page--;
+            send();
         }
-    }
+    });
 
-    var infoTemplate = `
-        <div class="info-title"> ${selectedMovie.title} </div>
-    `;
-
-    $('#wrapper-info').append(infoTemplate);
+    $(document).on('click', '#page-forward', function() {
+        if (page + 1 <= maxPage) {
+            page++;
+            send();
+        }
+    });
 }
+
+    //<th><div class="th">Runtime</div></th>
+    // <th><div class="th">Actors</div></th>
+    // <th><div class="th">Plot</div></th>
+    // <th><div class="th">Poster</div></th>
+    // <th><div class="th">IMDB</div></th>
+    // <th><div class="th">Tomato</div></th>
+    // <th><div class="th">Metacritic</div></th>
+    // <th><div class="th">Awards</div></th>
+    // <th><div class="th">Type</div></th>
+
 
 //'<td id="Runtime"><div class="tdData">' + runtime + '</div></td>' +
 //'<td id="actors"><div class="tdData">' + actors + '</div></td>' +

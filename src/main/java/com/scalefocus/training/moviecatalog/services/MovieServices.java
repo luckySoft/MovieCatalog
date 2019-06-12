@@ -3,6 +3,7 @@ package com.scalefocus.training.moviecatalog.services;
 import com.scalefocus.training.moviecatalog.exception.MovieNotFoundException;
 import com.scalefocus.training.moviecatalog.repository.MovieRepository;
 import com.scalefocus.training.moviecatalog.Мodels.Movie;
+import com.scalefocus.training.moviecatalog.Мodels.MoviePages;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -39,14 +40,14 @@ public class MovieServices {
     }
 
 
-    public List<Movie> getAll(Integer page) throws MovieNotFoundException {
+    public MoviePages getAll(Integer page) throws MovieNotFoundException {
         try {
             Pageable tenPerPage = PageRequest.of(page, 10, Sort.by("year").descending());
 
             Page<Movie> newPage = repository.findAll(tenPerPage);
 
             if (newPage.hasContent())
-                return newPage.getContent();
+                return new MoviePages((long) newPage.getTotalPages(), newPage.getContent());
             else {
                 throw new MovieNotFoundException("");
             }
@@ -56,17 +57,18 @@ public class MovieServices {
 
     }
 
-
-    public List<Movie> getByTitleLike(String title, Integer page) throws MovieNotFoundException {
+    public MoviePages getByTitleLike(String title, Integer page) throws MovieNotFoundException {
 
         Pageable tenPerPage = PageRequest.of(page, 10);
 
         List<Movie> newList = repository.findByTitleLikeIgnoreCase(title, tenPerPage);
 
+        Long count = (long)repository.findByTitleLikeIgnoreCase(title).size()/10;
+
         try {
 
             if (newList.size() != 0) {
-                return newList;
+                return new MoviePages(count,newList);
             } else {
                 throw new MovieNotFoundException("");
             }

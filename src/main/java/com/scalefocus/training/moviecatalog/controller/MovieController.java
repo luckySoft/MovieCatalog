@@ -3,6 +3,7 @@ package com.scalefocus.training.moviecatalog.controller;
 import com.scalefocus.training.moviecatalog.exception.MovieNotFoundException;
 import com.scalefocus.training.moviecatalog.services.MovieServices;
 import com.scalefocus.training.moviecatalog.Мodels.Movie;
+import com.scalefocus.training.moviecatalog.Мodels.MoviePages;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,18 +25,18 @@ public class MovieController {
     }
 
     //GetMappings
-    @GetMapping("/id={id}")
-    public Movie getMovieById(@PathVariable String id) throws MovieNotFoundException {
+    @GetMapping(params={"id"})
+    public Movie getMovieById(@RequestParam("id") String id) throws MovieNotFoundException {
         return services.getById(id);
     }
 
-    @GetMapping("/movies=all+page={page}")
-    public List<Movie> getAllMovies(@PathVariable Integer page) throws MovieNotFoundException {
+    @GetMapping(params={"page"})
+    public MoviePages getAllMovies(@RequestParam("page") Integer page) throws MovieNotFoundException {
         return services.getAll(page);
     }
 
-    @GetMapping("/title={title}+page={page}")
-    public List<Movie> getByTitleLike(@PathVariable String title, @PathVariable Integer page) throws MovieNotFoundException {
+    @GetMapping(params = {"title","page"})
+    public MoviePages getByTitleLike(@RequestParam("title") String title, @RequestParam("page") Integer page) throws MovieNotFoundException {
         return services.getByTitleLike(title, page);
     }
 
