@@ -50,8 +50,12 @@
 .dropdown-city {
     position: relative;
     float: left;
-    padding: 7px 10px 0px 10px;
+    padding: 16px 10px 0px 10px;
     display: inline-block;
+}
+
+.sidebar-form{
+    margin-top: 20px!important;
 }
 
 /* Dropdown Content (Hidden by Default) */
@@ -96,6 +100,7 @@
     border: 0px;
     border-radius: 5%;
     float: left;
+    margin-top: 5px;
     padding: 7px 10px 8px 10px;
 }
 
@@ -120,22 +125,74 @@
 }
 
 .wrapper-info{
-    position: absolute;
+    position: fixed;
     border-radius: 1%;
     top: 5%;
     left: 25%;
     width: 50vw;
-    height: 45vw;
+    max-height: 75%;
+    padding: 25px;
     visibility: hidden;
     background: white;
     box-shadow: 2px 2px 15px;
     z-index: 10002;
+    overflow-y: auto;
+}
+
+.info-container{
+    position: relative;
+    height: auto;
 }
 
 .info-title{
-    position: absolute;
+    position: relative;
     width: 100%;
-    margin-top: 5px;
+    margin-top: -10px;
+    margin-bottom: 10px;
     text-align: center;
-    font-size: 25px;
+    font-weight: bold;
+    font-size: 30px;
+    z-index: 1;
+}
+
+.info-poster{
+    position: relative;
+    display: inline;
+    float: left;
+    margin: 10px;
+    width: 200px;
+    height: 200px;
+    box-shadow: 1px 1px 10px;
+}
+
+.info-txt{
+    position: relative;
+    border: solid 1px;
+    display: inline;
+    float: left;
+    max-width: 400px;
+    min-width: 50px;
+    min-height: 30px;
+    margin: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    background-color: #eaebed;
+    box-shadow: 1px 1px 7px;
+}
+
+.info-txt-title{
+    font-size: 15px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.info-txt-buttons{
+    position: relative;
+    height: 20%;
+    bottom: 20px;
+    width: 100%;
+}
+
+li{
+    cursor: pointer;
 }

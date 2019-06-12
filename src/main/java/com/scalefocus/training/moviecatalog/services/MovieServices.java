@@ -38,15 +38,20 @@ public class MovieServices {
         if (!moviePage.hasContent()) throw new MovieNotFoundException("There are no movies!");
 
 
+
         return new MoviePages((long) moviePage.getTotalPages(), moviePage.getContent());
     }
 
 
+
+
     public MoviePages getByTitleLike(String title, Integer page) throws MovieNotFoundException {
+
 
         Pageable tenPerPage = PageRequest.of(page, size);
 
         Page<Movie> moviePage = repository.findByTitleLikeIgnoreCase(title, tenPerPage);
+
 
         if (!moviePage.hasContent())
             throw new MovieNotFoundException("Movies with title " + title + " are not present!");

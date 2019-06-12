@@ -15,7 +15,6 @@ public interface MovieRepository extends MongoRepository<Movie, String> {
 
     @Query(value = "{'actors': {$regex : ?0, $options: 'i'}}")
     Page<Movie> findByActorsRegex(String actor, Pageable pageable);
-
     
     Page<Movie> findByGenresIgnoreCase(String genres, Pageable pageable);
 

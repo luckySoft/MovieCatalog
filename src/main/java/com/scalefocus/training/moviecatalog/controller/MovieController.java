@@ -23,13 +23,16 @@ public class MovieController {
     }
 
     //GetMappings
+
     @GetMapping(params = {"id"})
     public Movie getMovieById(@RequestParam("id") String id) throws MovieNotFoundException {
         return services.getById(id);
     }
 
+
     @GetMapping(params = {"page"})
     public MoviePages getAllMovies(@RequestParam("page") Integer page) throws MovieNotFoundException {
+
         return services.getAll(page);
     }
 
