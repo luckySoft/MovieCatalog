@@ -1,4 +1,6 @@
 var movies = [];
+var selectedMovie;
+
 var page = 0;
 var maxPage = Infinity;
 
@@ -124,7 +126,6 @@ function loadInfo(row) {
     $('#shadow').css('visibility', 'visible');
     $('#wrapper-info').css('visibility', 'visible');
 
-    var selectedMovie;
     var movieName = row.closest('tr').attr('data-id');
     for (var i = 0; i < movies.length; i++) {
         if (movies[i].id == movieName) {
@@ -271,15 +272,32 @@ function loadInfo(row) {
 
     $('.wrapper-info').append(infoTemplate);
 
-    // $('.wrapper-info').append(`
-    //     <div class="info-txt-buttons">
-    //         <button class="btn btn-primary btn-flat" name="AddUser">Add</button>
-    //         <button class="btn btn-danger btn-flat" name="Cancel">Delete</button>
-    //     </div>
-    // `);
+    $('.wrapper-info').append(`
+        <div class="info-txt-buttons">
+            <button class="btn btn-primary btn-flat" name="AddUser">Add</button>
+            <button class="btn btn-danger btn-flat" onclick="deleteMovie()">Delete</button>
+        </div>
+    `);
 
     //console.log(selectedMovie);
 
+}
+
+function deleteMovie() {
+
+    var movieId = selectedMovie.id;
+
+    var url = `http://localhost:8080/movies?${movieId}`;
+
+    console.log(url);
+
+    $.ajax({
+        url: url,
+        type: 'DELETE',
+        success: (result) => {
+            alert('Movie was deleted successfully.');
+        }
+    });
 }
 
 function getObjProp(obj) {
@@ -309,11 +327,11 @@ function ChangeDropdown() {
     });
 }
 
-
 function eventListeners() {
     $('#shadow').click( function() {
         $(this).css('visibility', 'hidden');
         $('#wrapper-info').css('visibility', 'hidden');
+        selectedMovie = null;
     });
 
     $(document).on('click', '#row', function(e) {

@@ -141,6 +141,8 @@
 
 .info-container{
     position: relative;
+    overflow: auto;
+    margin-bottom: 10px;
     height: auto;
 }
 
@@ -188,8 +190,7 @@
 
 .info-txt-buttons{
     position: relative;
-    height: 20%;
-    bottom: 20px;
+    text-align: center;
     width: 100%;
 }
 
