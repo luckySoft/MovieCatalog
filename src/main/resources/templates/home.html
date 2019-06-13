@@ -25,6 +25,12 @@
             <div class="user-search-wrapper">
                 <div class="sidebar-form">
                     <input type="text" id="movie-search" class="form-control" placeholder="Search">
+                    <div class="checkbox-rating">
+                        <input type="checkbox" id='checkboxRating'>
+                        <div class="checkbox-rating-text-wrapper">
+                            <p class="checkbox-rating-text">Sort by Rating</p>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="dropdown-city">
@@ -32,11 +38,11 @@
                 <div id="dropdown-content" class="dropdown-content">
                     <a href="#" search-category="movies?title">Title</a>
                     <a href="#" search-category="movies?genres">Genres</a>
-                    <a href="#" search-category="movies?rating">Rating</a>
+                    <a href="#" search-category="movies?imdbRating">Rating</a>
                 </div>
             </div>
             <div class="btn-search-users">
-                <button class="bg-purple btn-search-users" onclick="send()">Show movies</button>
+                <button class="bg-purple btn-search-users" onclick="getMovies()">Show movies</button>
             </div>
         </header>
         <div class="content-wrapper">

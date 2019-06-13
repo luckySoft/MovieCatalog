@@ -41,6 +41,16 @@ public class MovieController {
         return services.getByTitleLike(title, page);
     }
 
+    @GetMapping(params = {"title", "sorted=1", "page"})
+    public MoviePages getByTitleLikeAndSortByImdbRating(@RequestParam("title") String title, @RequestParam("page") Integer page) throws MovieNotFoundException {
+        return services.getByTitleLikeAndSortByImdbRating(title, page);
+    }
+
+    @GetMapping(params = {"genres", "sorted=1", "page"})
+    public MoviePages getByGenreLikeAndSortByImdbRating(@RequestParam("genres") String genres, @RequestParam("page") Integer page) throws MovieNotFoundException {
+        return services.getByGenreLikeAndSortByImdbRating(genres, page);
+    }
+
     @GetMapping(params = {"actors", "page"})
     public MoviePages getByActors(@RequestParam String actors, @RequestParam Integer page) throws MovieNotFoundException {
         return services.getByActors(actors,page);
@@ -52,17 +62,17 @@ public class MovieController {
         return services.getByGenres(genres,page);
     }
 
-    @GetMapping(params = {"plot","page"})
+    @GetMapping(params = {"plot", "page"})
     public MoviePages getByPlotLike(@RequestParam String plot,@RequestParam Integer page) throws MovieNotFoundException {
         return services.getByPlotLike(plot,page);
     }
 
-    @GetMapping(params = {"imdbRating","page"})
+    @GetMapping(params = {"imdbRating", "page"})
     public MoviePages getByImdbRating(@RequestParam Double imdbRating, @RequestParam Integer page) throws MovieNotFoundException{
         return services.getByImdbRating(imdbRating,page);
     }
 
-    @GetMapping(params = {"sorted=1","page"})
+    @GetMapping(params = {"sorted=1", "page"})
     public MoviePages sortByRating(@RequestParam Integer page) throws MovieNotFoundException {
         return services.sortByRating(page);
     }
@@ -85,7 +95,6 @@ public class MovieController {
     }
 
     //Delete Mappings
-
     @DeleteMapping(params = "id")
     public void deleteMovie(@RequestParam String id) throws MovieNotFoundException{
         services.deleteMovie(id);

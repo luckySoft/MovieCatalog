@@ -1,30 +1,53 @@
-var movies = [];
-var selectedMovie;
+//array with all movies on the page
+let movies = [];
+//when movie is clicked, its assign to this variable
+let selectedMovie;
+//current page
+let page = 0;
+//max pages for this search
+let maxPage = Infinity;
+//default url path
+const url = `http://localhost:8080`;
+//switch for editing
+let editFlag = 1;
+//search term
+let searchTerm;
 
-var page = 0;
-var maxPage = Infinity;
 
+//call functions when page is open for the first time
 window.onload = () => {
     ChangeDropdown();
     eventListeners();
-    send();
+    getMovies();
 }
 
-function send() {
-
-    var url = `http://localhost:8080`;
+//GET requests
+function getMovies() {
 
     var fullUrl;
 
+    var sort = $('#checkboxRating:checked').val();
     var category = $('#btn-options').attr('search-category');
-    if (category != 'movies') {
-        var searchTerm = $('#movie-search').val();
-        fullUrl = `${url}/${category}=${searchTerm}&page=${page}`;
-    } else {
-        fullUrl = `${url}/${category}?page=${page}`;
+    if ($('#movie-search').val() != searchTerm) {
+        searchTerm = $('#movie-search').val();
+        page = 0;
     }
 
-    console.log(fullUrl);
+    if (category != 'movies' && searchTerm.length != 0) {
+        if (sort == 'on') {
+            fullUrl = `${url}/${category}=${searchTerm}&sorted=1&page=${page}`;
+        } else {
+            fullUrl = `${url}/${category}=${searchTerm}&page=${page}`;
+        }
+    } else {
+        if (sort == 'on') {
+            fullUrl = `${url}/movies?sorted=1&page=${page}`;
+        } else {
+            fullUrl = `${url}/movies?page=${page}`;
+        }
+    }
+
+    //console.log(fullUrl);
 
     $.ajax({
         url: fullUrl,
@@ -38,12 +61,12 @@ function send() {
     });
 }
 
+//filling movie table
 function fillMovieTable(r) {
     movies = [];
 
-    var result = r.movieList;
+    var movieList = r.movieList;
     maxPage = r.pages;
-
 
     $('#tb').empty();
     $('#tb').append(`
@@ -53,7 +76,7 @@ function fillMovieTable(r) {
                     <th><div class="th">Poster</div></th>
                     <th><div class="th">Title</div></th>
                     <th><div class="th">Year</div></th>
-                    <th><div class="th">IMDB Rating</div></th>
+                    <th onclick="sortByRating()"><div class="th">IMDB Rating</div></th>
                     <th><div class="th">Countries</div></th>
                     <th><div class="th">Director</div></th>
                     <th><div class="th">writers</div></th>
@@ -67,31 +90,12 @@ function fillMovieTable(r) {
         </table>
     `);
 
-    var img = [];
+    var img = loadImages(movieList);
 
-    for (var i = 0; i < result.length; i++) {
-        img.push(result[i]['poster']);
-    }
+    for (var i = 0; i < movieList.length; i++) {
+        movies.push(movieList[i]);
 
-    var imagesLoaded = 0;
-    var totalImages = result.length;
-
-    $('img').each(function(idx, img) {
-        $('<img>').on('load', imageLoaded).attr('src', $(img).attr('src'));
-    });
-
-    function imageLoaded() {
-        imagesLoaded++;
-        if (imagesLoaded == totalImages) {
-            allImagesLoaded();
-        }
-    }
-
-    for (var i = 0; i < result.length; i++) {
-
-        movies.push(result[i]);
-
-        var id = result[i]['id'];
+        var id = movieList[i]['id'];
 
         var poster = img[i];
         if (poster == null) {
@@ -99,13 +103,16 @@ function fillMovieTable(r) {
             movies[i]['poster'] = poster;
         }
 
-        let title = result[i]['title'];
-        let year = result[i]['year'];
-        let rated = result[i]['imdb'].rating;
-        let contries = result[i]['countries'];
-        let director = result[i]['director'];
-        let writers = result[i]['writers'];
-        let type = result[i]['type'];
+        let title = movieList[i]['title'];
+        let year = movieList[i]['year'];
+        let rated = null;
+        if (movieList[i]['imdb'] != null) {
+            rated = movieList[i]['imdb'].rating;
+        }
+        let contries = movieList[i]['countries'];
+        let director = movieList[i]['director'];
+        let writers = movieList[i]['writers'];
+        let type = movieList[i]['type'];
 
         $('#movieData tbody').append(`
             <tr id="row" data-id='${id}'>
@@ -135,18 +142,21 @@ function loadInfo(row) {
 
     var infoTemplate= `<div class="info-container">`;
     infoTemplate += `
-        <div class="info-title"> ${selectedMovie.title} </div>
-        <div class="info-poster"><img src=" ${selectedMovie.poster} " height="200px" width="200px"> </div>
+        <div class="info-title"><p class=" info-p"> ${selectedMovie.title} </p></div>
+        <textarea class="info-input" cols="50" row="1"> ${selectedMovie.title} </textarea>
+        <div class="info-poster info-p"><img src=" ${selectedMovie.poster} " height="200px" width="200px"> </div>
+        <textarea class="info-input" cols="50" row="1"> ${selectedMovie.poster} </textarea>
     `;
 
     if (selectedMovie.imdb != null) {
         let imdbResult = selectedMovie['imdb'];
-        let imdb = getObjProp(imdbResult);
-        if (imdb != '') {
+        let imdb = getObjProps(imdbResult);
+        if (imdb != '<div class="input-txt"></div>') {
             infoTemplate += `
                 <div class="info-txt">
                     <div class="info-txt-title">IMDB</div>
-                    <p>${imdb}</p>
+                    ${imdb}
+                    <textarea cols="15" rows="2" class="info-input">${imdb}</textarea>
                 </div>
             `;
         }
@@ -154,7 +164,7 @@ function loadInfo(row) {
 
     if (selectedMovie.tomato != null) {
         let tomatoResult = selectedMovie['tomato'];
-        let tomato = getObjProp(tomatoResult);
+        let tomato = getObjProps(tomatoResult);
         if (tomato != '') {
             infoTemplate += `
                 <div class="info-txt">
@@ -167,7 +177,7 @@ function loadInfo(row) {
 
     if (selectedMovie.awards != null) {
         let awardsResult = selectedMovie['awards'];
-        let awards = getObjProp(awardsResult);
+        let awards = getObjProps(awardsResult);
         if (awards != '') {
             infoTemplate += `
                 <div class="info-txt">
@@ -274,41 +284,63 @@ function loadInfo(row) {
 
     $('.wrapper-info').append(`
         <div class="info-txt-buttons">
-            <button class="btn btn-primary btn-flat" name="AddUser">Add</button>
+            <button class="btn btn-primary btn-flat" onclick="editMovie()">Edit</button>
             <button class="btn btn-danger btn-flat" onclick="deleteMovie()">Delete</button>
         </div>
     `);
 
-    //console.log(selectedMovie);
+}
 
+function loadImages(movieList) {
+    var img = [];
+    for (var i = 0; i < movieList.length; i++) {
+        img.push(movieList[i]['poster']);
+    }
+
+    var imagesLoaded = 0;
+    var totalImages = movieList.length;
+
+    $('img').each(function(idx, img) {
+        $('<img>').on('load', imageLoaded).attr('src', $(img).attr('src'));
+    });
+
+    function imageLoaded() {
+        imagesLoaded++;
+        if (imagesLoaded == totalImages) {
+            allImagesLoaded();
+        }
+    }
+    return img;
 }
 
 function deleteMovie() {
 
     var movieId = selectedMovie.id;
 
-    var url = `http://localhost:8080/movies?${movieId}`;
+    var fullUrl = url + `/movies?id=${movieId}`;
 
-    console.log(url);
+    //console.log(fullUrl);
 
     $.ajax({
-        url: url,
+        url: fullUrl,
         type: 'DELETE',
         success: (result) => {
-            alert('Movie was deleted successfully.');
+            getMovies();
+            hideInfoMovie()
         }
     });
 }
 
-function getObjProp(obj) {
-    var result = '';
+function getObjProps(obj) {
+    var result = '<div class="input-txt">';
     if (obj != null) {
         for (var key in obj) {
             if (obj.hasOwnProperty(key) && obj[key] != null) {
-                result += key + ' : ' + obj[key] + '<br>';
+                result += `<div>${key}:${obj[key]}</div>`;
             }
         }
     }
+    result += '</div>';
     return result;
 }
 
@@ -324,14 +356,14 @@ function ChangeDropdown() {
 
         $(this).text(lastSelectedText);
         $(this).attr('search-category', lastSelectedAtr);
+        page = 0;
     });
+
 }
 
 function eventListeners() {
     $('#shadow').click( function() {
-        $(this).css('visibility', 'hidden');
-        $('#wrapper-info').css('visibility', 'hidden');
-        selectedMovie = null;
+        hideInfoMovie();
     });
 
     $(document).on('click', '#row', function(e) {
@@ -341,72 +373,37 @@ function eventListeners() {
     $(document).on('click', '#page-back', function() {
         if (page - 1 >= 0) {
             page--;
-            send();
+            getMovies();
         }
     });
 
     $(document).on('click', '#page-forward', function() {
-        if (page + 1 <= maxPage) {
+        if (page + 1 < maxPage) {
             page++;
-            send();
+            getMovies();
         }
     });
 }
 
-    //<th><div class="th">Runtime</div></th>
-    // <th><div class="th">Actors</div></th>
-    // <th><div class="th">Plot</div></th>
-    // <th><div class="th">Poster</div></th>
-    // <th><div class="th">IMDB</div></th>
-    // <th><div class="th">Tomato</div></th>
-    // <th><div class="th">Metacritic</div></th>
-    // <th><div class="th">Awards</div></th>
-    // <th><div class="th">Type</div></th>
+function hideInfoMovie() {
+    $('#shadow').css('visibility', 'hidden');
+    $('#wrapper-info').css('visibility', 'hidden');
+    //editMovie();
+    selectedMovie = null;
+}
 
-
-//'<td id="Runtime"><div class="tdData">' + runtime + '</div></td>' +
-//'<td id="actors"><div class="tdData">' + actors + '</div></td>' +
-//'<td id="plot"><div class="tdData">' + plot + '</div></td>' +
-//'<td id="poster"><div class="tdData">' + poster + '</div></td>' +
-//'<td id="imdb"><div class="tdData">' + imdb + '</div></td>' +
-//'<td id="tomato"><div class="tdData">' + tomato + '</div></td>' +
-//'<td id="metacritic"><div class="tdData">' + metacritic + '</div></td>' +
-//'<td id="awards"><div class="tdData">' + awards + '</div></td>' +
-//'<td id="type"><div class="tdData">' + type + '</div></td>' +
-
-        //let runtime = result[i]['runtime'];
-        //let actors = result[i]['actors'];
-        //let plot = result[i]['plot'];
-        //let poster = result[i]['poster'];
-
-        //let imdbResult = result[i]['imdb'];
-        // let imdb = '';
-        // if (imdbResult != null && imdbResult != undefined) {
-        //     for (var key in imdbResult) {
-        //         if (imdbResult.hasOwnProperty(key)) {
-        //             imdb += key + ' : ' + imdbResult[key] + '<br>';
-        //         }
-        //     }
-        // }
-
-        // let tomatoResult = result[i]['tomato'];
-        // let tomato = '';
-        // if (tomatoResult != null && tomatoResult != undefined) {
-        //     for (var key in tomatoResult) {
-        //         if (tomatoResult.hasOwnProperty(key)) {
-        //             tomato += key + ' : ' + tomatoResult[key] + '<br>';
-        //         }
-        //     }
-        // }
-
-        //let metacritic = result[i]['metacritic'];
-
-        // let awardsResult = result[i]['awards'];
-        // let awards = '';
-        // if (awardsResult != null && awardsResult != undefined) {
-        //     for (var key in awardsResult) {
-        //         if (awardsResult.hasOwnProperty(key)) {
-        //             awards += key + ' : ' + awardsResult[key] + '<br>';
-        //         }
-        //     }
-        // }
+function editMovie() {
+    // console.log(editFlag);
+    // if (editFlag == -1) {
+    //     $('.info-p').css('visibility', 'visible');
+    //     $('.info-p').css('display', 'inline');
+    //     $('.info-input').css('visibility', 'hidden');
+    //     $('.info-input').css('display', 'none');
+    // } else {
+    //     $('.info-p').css('visibility', 'hidden');
+    //     $('.info-p').css('display', 'none');
+    //     $('.info-input').css('visibility', 'visible');
+    //     $('.info-input').css('display', 'inline');
+    // }
+    // editFlag *= -1;
+}

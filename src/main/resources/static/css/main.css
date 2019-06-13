@@ -54,6 +54,44 @@
     display: inline-block;
 }
 
+.checkbox-rating{
+    position: absolute;
+    right: 20px;
+    top: 27px;
+    padding: 16px -40px 0px 10px;
+    z-index: 100011;
+}
+
+.checkbox-rating-text-wrapper{
+    position: absolute;
+    width: 100px;
+    height: 30px;
+    top: 15px;
+    text-align: center;
+    right: 15px;
+    font-size: 13px;
+    background-color: grey;
+    opacity: 0.8;
+    border-top-left-radius: 10%;
+    border-bottom-left-radius: 10%;
+    border-bottom-right-radius: 10%;
+    visibility: hidden;
+    display: none;
+    z-index: 100011;
+}
+
+.checkbox-rating-text{
+    position: absolute;
+    width: 100px;
+    color: white;
+    top: 5px;
+}
+
+.checkbox-rating:hover .checkbox-rating-text-wrapper{
+    visibility: visible;
+    display: inline-block;
+}
+
 .sidebar-form{
     margin-top: 20px!important;
 }
@@ -83,7 +121,6 @@
 /* Show the dropdown menu on hover */
 .dropdown-city:hover .dropdown-content {
     display: block;
-    string_ot_masivi.run;
 }
 
 /* Change the background color of the dropdown button when the dropdown content is shown */
@@ -170,14 +207,14 @@
 .info-txt{
     position: relative;
     border: solid 1px;
+    text-align: center;
     display: inline;
     float: left;
     max-width: 400px;
     min-width: 50px;
     min-height: 30px;
     margin: 10px;
-    padding-left: 10px;
-    padding-right: 10px;
+    padding: 10px;
     background-color: #eaebed;
     box-shadow: 1px 1px 7px;
 }
@@ -192,6 +229,15 @@
     position: relative;
     text-align: center;
     width: 100%;
+}
+
+.info-input{
+    visibility: hidden;
+    overflow: auto;
+}
+
+.info-input{
+    display: none;
 }
 
 li{

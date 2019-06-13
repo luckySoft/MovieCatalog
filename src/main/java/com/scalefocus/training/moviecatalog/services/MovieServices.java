@@ -59,6 +59,32 @@ public class MovieServices {
         return new MoviePages((long) moviePage.getTotalPages(), moviePage.getContent());
     }
 
+    public MoviePages getByTitleLikeAndSortByImdbRating(String title, Integer page) throws MovieNotFoundException {
+
+        Pageable tenPerPage = PageRequest.of(page, size, Sort.by("imdb.rating").descending());
+
+        Page<Movie> moviePage = repository.findByTitleLikeIgnoreCase(title, tenPerPage);
+
+
+        if (!moviePage.hasContent())
+            throw new MovieNotFoundException("Movies with title " + title + " are not present!");
+
+        return new MoviePages((long) moviePage.getTotalPages(), moviePage.getContent());
+    }
+
+    public MoviePages getByGenreLikeAndSortByImdbRating(String genres, Integer page) throws MovieNotFoundException {
+
+        Pageable tenPerPage = PageRequest.of(page, size, Sort.by("imdb.rating").descending());
+
+        Page<Movie> moviePage = repository.findByGenresIgnoreCase(genres, tenPerPage);
+
+
+        if (!moviePage.hasContent())
+            throw new MovieNotFoundException("Movies with genre " + genres + " are not present!");
+
+        return new MoviePages((long) moviePage.getTotalPages(), moviePage.getContent());
+    }
+
     public MoviePages getByActors(String actors, Integer page) throws MovieNotFoundException {
         Pageable tenPerPage = PageRequest.of(page, size);
 
