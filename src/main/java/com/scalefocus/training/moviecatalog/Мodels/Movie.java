@@ -3,6 +3,11 @@ package com.scalefocus.training.moviecatalog.Мodels;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+/**
+ * POJO class used to store objects from the database
+ * @author Mariyan Topalov
+ * @author Zdravko Karamanolov
+ */
 @Document(collection = "movieDetails")
 public class Movie {
 

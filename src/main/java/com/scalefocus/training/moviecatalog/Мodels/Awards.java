@@ -1,5 +1,8 @@
 package com.scalefocus.training.moviecatalog.Мodels;
 
+/**
+ * POJO class used to stored objects from the database
+ */
 public class Awards {
 
     private String wins;

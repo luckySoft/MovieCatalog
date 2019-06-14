@@ -1,5 +1,8 @@
 package com.scalefocus.training.moviecatalog.Мodels;
 
+/**
+ * POJO class used to store objects from the database
+ */
 public class Imdb {
 
 

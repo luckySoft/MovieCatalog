@@ -107,7 +107,14 @@ function fillMovieTable(r) {
         let year = movieList[i]['year'];
         let rated = null;
         if (movieList[i]['imdb'] != null) {
-            rated = movieList[i]['imdb'].rating;
+
+        if(movieList[i]['imdb'].rating===null){
+
+        rated="N.A.";
+
+        }else{
+
+            rated = movieList[i]['imdb'].rating;}
         }
         let contries = movieList[i]['countries'];
         let director = movieList[i]['director'];

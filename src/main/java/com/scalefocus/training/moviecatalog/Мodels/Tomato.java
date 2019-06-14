@@ -1,5 +1,10 @@
 package com.scalefocus.training.moviecatalog.Мodels;
 
+/**
+ * POJO class. Used to store object from the database
+ * @author Mariyan Topalov
+ * @author Zdravko Karamanolov
+ */
 public class Tomato {
 
     private String meter;

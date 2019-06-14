@@ -2,24 +2,29 @@ package com.scalefocus.training.moviecatalog.Мodels;
 
 import java.util.List;
 
+/**
+ * Simple POJO class
+ * @author Mariyan Topalov
+ * @author Zdravko Karamanolov
+ */
 public class MoviePages {
 
-    private Long pages;
+    private Long numberOfPages;
 
     private List<Movie> movieList;
 
     public MoviePages(Long pages, List<Movie> movieList) {
-        this.pages = pages;
+        this.numberOfPages = pages;
         this.movieList = movieList;
 
     }
 
-    public Long getPages() {
-        return pages;
+    public Long getNumberOfPages() {
+        return numberOfPages;
     }
 
-    public void setPages(Long pages) {
-        this.pages = pages;
+    public void setNumberOfPages(Long numberOfPages) {
+        this.numberOfPages = numberOfPages;
     }
 
 
